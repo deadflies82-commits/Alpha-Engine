@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository Code
       uses: actions/checkout@v4
 
-    - name: Deploy bot.py to PythonAnywhere Server
+    - name: Force Sync bot.py to PythonAnywhere
       env:
         PA_TOKEN: ${{ secrets.PA_API_TOKEN }}
       run: |
