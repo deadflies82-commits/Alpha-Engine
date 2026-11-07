@@ -1,14 +1,15 @@
 import os
 import time
 import sys
+from memory import is_blacklisted, record_mistake
 
 # 1. FIXED SYSTEM RISK PARAMETERS
 STARTING_CAPITAL = 200.00
-MAX_DAILY_LOSS = STARTING_CAPITAL * 0.02  # Strict 2% Max Drawdown ($4.00 cap)
-INITIAL_POSITION_LIMIT = 10.00             # Rung 1 of the scaling ladder
+MAX_DAILY_LOSS = STARTING_CAPITAL * 0.02  # Strict 2% daily loss cap
+INITIAL_POSITION_LIMIT = 10.00            # Rung 1 limit
 
-print("🔒 [Alpha Core] System Initialized Under Institutional Risk Management Framework.")
-print(f"📊 Matrix Active: Capital Base ${STARTING_CAPITAL:.2f} | Risk Cap: ${MAX_DAILY_LOSS:.2f}")
+print("🛡️ [Alpha Core] System Initialized Under Institutional Architecture")
+print(f"📊 Matrix Active: Capital Base ${STARTING_CAPITAL}")
 
 def run_quant_desk_cycle():
     # 🛑 MEMORY CHECK: Skip if target is historically blacklisted
