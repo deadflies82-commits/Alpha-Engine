@@ -11,6 +11,14 @@ print("🔒 [Alpha Core] System Initialized Under Institutional Risk Management 
 print(f"📊 Matrix Active: Capital Base ${STARTING_CAPITAL:.2f} | Risk Cap: ${MAX_DAILY_LOSS:.2f}")
 
 def run_quant_desk_cycle():
+    # 🛑 MEMORY CHECK: Skip if target is historically blacklisted
+    # if is_blacklisted(target_token):
+    #     print("🛑 Skipping blacklisted target.")
+    #     return
+
+    # Sync point-in-time clocks for data immutability
+    current_utc_time = time.time()
+
     # Sync point-in-time clocks for data immutability
     current_utc_time = time.time()
     print(f"\n⏱️ UTC Clock Sync Check: {current_utc_time} -> Status: SECURE")
