@@ -44,3 +44,52 @@ while True:
         print("CRITICAL: Master Kill Switch Activated. System flattened to cash safety.")
     print("💤 Systems idling safely for 5 minutes until next loop...")
     time.sleep(300)
+MEMORY_FILE = "execution_memory.json"
+
+def load_failure_memory():
+    """Loads historical trade failures and blacklisted patterns."""
+    if not os.path.exists(MEMORY_FILE):
+        return {"blacklisted_tokens": [], "failed_wallets": [], "error_counts": {}}
+    try:
+        with open(MEMORY_FILE, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {"blacklisted_tokens": [], "failed_wallets": [], "error_counts": {}}
+
+def save_failure_memory(memory_data):
+    """Saves updated memory state persistently."""
+    with open(MEMORY_FILE, "w") as f:
+        json.dump(memory_data, f, indent=4)
+
+def record_mistake(identifier: str, error_type: str):
+    """
+    Logs a failure state so the system learns never to repeat it.
+    identifier: token address or wallet handle that caused the failure.
+    error_type: reason for failure (e.g., 'RugCheck_Failed', 'High_Slippage').
+    """
+    memory = load_failure_memory()
+    
+    if error_type == "RugCheck_Failed" or error_type == "Scam_Detected":
+        if identifier not in memory["blacklisted_tokens"]:
+            memory["blacklisted_tokens"].append(identifier)
+    
+    if identifier not in memory["failed_wallets"]:
+        memory["failed_wallets"].append(identifier)
+        
+    memory["error_counts"][error_type] = memory["error_counts"].get(error_type, 0) + 1
+    save_failure_memory(memory)
+    print(f"🧠 [SELF-LEARNING ENGINE] Recorded failure for [{identifier}]. Reason: {error_type}. Blacklisted permanently.")
+
+def is_blacklisted(identifier: str) -> bool:
+    """Checks if a target or token has a recorded history of failure."""
+    memory = load_failure_memory()
+    return identifier in memory["blacklisted_tokens"] or identifier in memory["failed_wallets"]
+
+if __name__ == "__main__":
+    # Test the learning engine
+    test_token = "So11111111111111111111111111111111111111112"
+    
+    if not is_blacklisted(test_token):
+        print(f"✅ Target {test_token} passed historical memory check. Clear for execution.")
+    else:
+        print(f"🛑 BLOCKED: Target {test_token} is on the permanent failure blacklist.")
