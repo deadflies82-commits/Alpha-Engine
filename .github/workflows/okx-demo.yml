@@ -1,26 +1,22 @@
-name: OKX Demo Trading Bot
+name: OKX Demo Test
 
 on:
-  workflow_dispatch: # Allows manual runs from the GitHub Actions tab
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  run-bot:
+  test-okx:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Install OKX SDK
-        run: pip install python-okx
-
-      - name: Run OKX Demo Script
-        env:
+      - run: pip install ccxt python-dotenv
+      - env:
           OKX_API_KEY: ${{ secrets.OKX_API_KEY }}
           OKX_SECRET_KEY: ${{ secrets.OKX_SECRET_KEY }}
           OKX_PASSPHRASE: ${{ secrets.OKX_PASSPHRASE }}
-        run: python bot.py
+          OKX_FLAG: "1"
+        run: python test_connection.py
