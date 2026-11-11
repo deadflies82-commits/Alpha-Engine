@@ -17,7 +17,9 @@ jobs:
       - name: Run connection test
         run: python test_connection.py
         env:
+          
           OKX_API_KEY: ${{ secrets.OKX_API_KEY }}
-          OKX_SECRET_KEY: ${{ secrets.OKX_SECRET_KEY }}
+          OKX_SECRET_KEY: ${{ secrets.OKX_API_SECRET }}
           OKX_PASSPHRASE: ${{ secrets.OKX_PASSPHRASE }}
           OKX_FLAG: "1"
+
