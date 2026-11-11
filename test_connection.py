@@ -1,36 +1,29 @@
 import os
-from dotenv import load_dotenv
+import sys
 import ccxt
 
-# Load environment variables from .env
-load_dotenv()
+api_key = os.getenv("OKX_API_KEY", "").strip()
+secret_key = os.getenv("OKX_SECRET_KEY", "").strip()
+passphrase = os.getenv("OKX_PASSPHRASE", "").strip()
 
-api_key = os.getenv("OKX_API_KEY")
-secret_key = os.getenv("OKX_SECRET_KEY")
-passphrase = os.getenv("OKX_PASSPHRASE")
-flag = os.getenv("OKX_FLAG")
+if not api_key or not secret_key or not passphrase:
+    print("ERROR: Missing one or more GitHub Secrets (OKX_API_KEY, OKX_SECRET_KEY, OKX_PASSPHRASE).")
+    sys.exit(1)
 
-print(f"Loaded API Key: {api_key[:6]}... (truncated for safety)")
-print(f"Demo Flag: {flag}")
-
-# Initialize OKX exchange instance for demo trading
 exchange = ccxt.okx({
-    'apiKey': api_key,
-    'secret': secret_key,
-    'password': passphrase,
-    'options': {
-        'defaultType': 'spot',
-    },
+    "apiKey": api_key,
+    "secret": secret_key,
+    "password": passphrase,
+    "options": {"defaultType": "spot"},
 })
 
-# Set sandbox/demo mode if flag is 1
-if flag == "1":
-    exchange.set_sandbox_mode(True)
+exchange.set_sandbox_mode(True)
 
 try:
-    # Test fetching balance
     balance = exchange.fetch_balance()
-    print("SUCCESS: Connected to OKX successfully!")
-    print("Account Balance:", balance['free'])
+    non_zero = {k: v for k, v in balance.get("free", {}).items() if v and v > 0}
+    print("SUCCESS: Connected to OKX Demo Trading!")
+    print("Available Demo Balances:", non_zero)
 except Exception as e:
     print("ERROR: Connection failed ->", e)
+    sys.exit(1)
